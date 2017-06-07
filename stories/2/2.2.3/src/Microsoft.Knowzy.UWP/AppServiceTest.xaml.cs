@@ -81,8 +81,6 @@ namespace Microsoft.Knowzy.UWP
                 if (result)
                 {
                     textBox.Text = message["Data"] as String;
-                    var text = message["Data"] as String;
-                    textBox.Text = text;
                 }
                 else if (message.ContainsKey("ErrorMessage"))
                 {
