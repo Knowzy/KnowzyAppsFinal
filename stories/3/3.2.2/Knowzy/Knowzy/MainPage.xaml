@@ -23,10 +23,14 @@
             </ListView.ItemTemplate>
         </ListView>
 
-        <StackLayout x:Name="remoteLaunchContainer" Orientation="Horizontal" Grid.Row="1" IsVisible="False">
+        <Grid x:Name="remoteLaunchContainer" Grid.Row="1" IsVisible="False">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" /> 
+            </Grid.ColumnDefinitions>
             <Label Text="Remote launch"  />
-            <ProgressBar x:Name="useRemoteDiscovery" />
-            <Switch  x:Name="useRemoteLaunch" IsToggled="False" IsVisible="False"/>
-        </StackLayout>
+            <ProgressBar x:Name="useRemoteDiscovery" Grid.Column="1" HorizontalOptions="Fill"/>
+            <Switch  x:Name="useRemoteLaunch" IsToggled="False" IsVisible="False" Grid.Column="1" HorizontalOptions="Fill"/>
+        </Grid>
     </Grid>
 </ContentPage>

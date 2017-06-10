@@ -42,21 +42,45 @@ namespace Knowzy
             System.Diagnostics.Debug.WriteLine("KNOWZY: Discovery completed"); 
             Device.BeginInvokeOnMainThread(() =>
             {
-                OnRemoteLaunchDiscoveryComplete();
+                OnRemoteLaunchDiscoveryComplete(false );
+               
             });
         }
 
-        private void OnRemoteLaunchDiscoveryComplete()
+        private void OnRemoteLaunchDiscoveryComplete( bool force)
         {
-            if ( launchService.HasRemoteSystemsAvailable )
+            if ( launchService.HasRemoteSystemsAvailable || force )
             {
                 useRemoteLaunch.IsVisible = true;
-                useRemoteDiscovery.IsVisible = false; 
+                useRemoteDiscovery.IsVisible = false;
+                useRemoteDiscovery.IsEnabled = false; 
+                useRemoteDiscovery.Progress = 1.0f; 
             }
         }
+
+        void UpdateProgress ( float percent )
+        {
+            useRemoteDiscovery.Progress = 1.0f; 
+
+        }
+
+
+        float timerProgress = 0f; 
         private void OnRemoteLaunchStatusChange( )
         {
-            remoteLaunchContainer.IsVisible = (launchService.AuthStatus == AuthenticationStatus.Authenticated);               
+            remoteLaunchContainer.IsVisible = (launchService.AuthStatus == AuthenticationStatus.Authenticated);
+            Device.StartTimer(TimeSpan.FromSeconds(1), () =>
+           {
+               useRemoteDiscovery.Progress += .03f;
+
+               if (useRemoteDiscovery.Progress < 1.0f)
+               {
+                   OnRemoteLaunchDiscoveryComplete(true); 
+                   return false; 
+               }
+               else
+                   return true;
+           }); 
         }
 
         private void LaunchService_AuthStatusChanged(object sender, EventArgs e)
@@ -65,6 +89,7 @@ namespace Knowzy
             {
                 System.Diagnostics.Debug.WriteLine("KNOWZY: Authenticated");
                 launchService.StartDiscovery();
+                
             } 
             Device.BeginInvokeOnMainThread(() =>
             {
