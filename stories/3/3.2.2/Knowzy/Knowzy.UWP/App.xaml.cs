@@ -46,6 +46,11 @@ namespace Knowzy.UWP
                 this.DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
+            CreateStartPage ( e ); 
+        }
+
+        void CreateStartPage( IActivatedEventArgs e  )
+        {
 
             Frame rootFrame = Window.Current.Content as Frame;
 
@@ -55,7 +60,6 @@ namespace Knowzy.UWP
             {
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();
-
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
                 Xamarin.Forms.Forms.Init(e);
@@ -73,8 +77,15 @@ namespace Knowzy.UWP
             {
                 // When the navigation stack isn't restored navigate to the first page,
                 // configuring the new page by passing required information as a navigation
-                // parameter
-                rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                // parameter                 
+
+                string queryString = string.Empty; 
+                if ( e.Kind == ActivationKind.Protocol )
+                {
+                    queryString = ((ProtocolActivatedEventArgs)e).Uri.Query; 
+                }
+                rootFrame.Navigate(typeof(MainPage), queryString  );
+
             }
             // Ensure the current window is active
             Window.Current.Activate();
@@ -102,6 +113,15 @@ namespace Knowzy.UWP
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: Save application state and stop any background activity
             deferral.Complete();
+        }
+
+        protected override void OnActivated(IActivatedEventArgs args)
+        {
+            base.OnActivated(args); 
+           
+            CreateStartPage(args );
+ 
+                                       
         }
     }
 }

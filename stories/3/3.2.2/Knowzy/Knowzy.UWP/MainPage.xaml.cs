@@ -19,9 +19,27 @@ namespace Knowzy.UWP
     {
         public MainPage()
         {
-            this.InitializeComponent();
+            this.InitializeComponent();            
+        }
 
-            LoadApplication(new Knowzy.App());
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+
+            Dictionary <string, string> queryParams = null;
+            var paramQueryString = e.Parameter as string; 
+            if ( ! string.IsNullOrEmpty ( paramQueryString )) 
+            {
+                queryParams = new Dictionary<string, string>(); 
+                WwwFormUrlDecoder decoder = new WwwFormUrlDecoder(paramQueryString);
+                var list = decoder.ToList(); 
+                foreach ( var entry in list )
+                {
+                    queryParams.Add(entry.Name, entry.Value); 
+                }
+            }
+
+            LoadApplication(new Knowzy.App(queryParams)); 
         }
     }
 }

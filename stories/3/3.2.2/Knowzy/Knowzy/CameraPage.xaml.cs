@@ -13,24 +13,50 @@ namespace Knowzy
 	public partial class CameraPage : ContentPage
 	{
         Nose _nose;
-
-        public CameraPage(Nose nose)
+        public CameraPage ()
         {
-            _nose = nose;
             InitializeComponent();
 
 #if WINDOWS_UWP
-    var inkingWrapper = (Xamarin.Forms.Platform.UWP.NativeViewWrapper)InkingContent.Content;
-    var inkCanvas = (Windows.UI.Xaml.Controls.InkCanvas)inkingWrapper.NativeElement;
-    inkCanvas.InkPresenter.InputDeviceTypes =
-        Windows.UI.Core.CoreInputDeviceTypes.Touch |
-        Windows.UI.Core.CoreInputDeviceTypes.Mouse |
-        Windows.UI.Core.CoreInputDeviceTypes.Pen;
+            var inkingWrapper = (Xamarin.Forms.Platform.UWP.NativeViewWrapper)InkingContent.Content;
+            var inkCanvas = (Windows.UI.Xaml.Controls.InkCanvas)inkingWrapper.NativeElement;
+            inkCanvas.InkPresenter.InputDeviceTypes =
+                Windows.UI.Core.CoreInputDeviceTypes.Touch |
+                Windows.UI.Core.CoreInputDeviceTypes.Mouse |
+                Windows.UI.Core.CoreInputDeviceTypes.Pen;
 
-    var inkToolbarWrapper = (Xamarin.Forms.Platform.UWP.NativeViewWrapper)InkingToolbar.Content;
-    var inkToolbar = (Windows.UI.Xaml.Controls.InkToolbar)inkToolbarWrapper.NativeElement;
-    inkToolbar.TargetInkCanvas = inkCanvas;
+            var inkToolbarWrapper = (Xamarin.Forms.Platform.UWP.NativeViewWrapper)InkingToolbar.Content;
+            var inkToolbar = (Windows.UI.Xaml.Controls.InkToolbar)inkToolbarWrapper.NativeElement;
+            inkToolbar.TargetInkCanvas = inkCanvas;
 #endif
+        }
+
+        public CameraPage ( string noseId ) : this() 
+        {
+            RetriveNoseData(noseId); 
+        }
+
+        async private Task RetriveNoseData ( string noseId )
+        {
+            try
+            {
+                var products = await DataProvider.GetProducts();
+                var nose = products.First( n => { return n.Id == noseId; }); 
+                if ( nose != null )
+                {
+                    _nose = nose; 
+                }
+
+            } catch ( Exception ex )
+            {
+                System.Diagnostics.Debug.WriteLine(ex.Message); 
+            }
+        }
+
+        public CameraPage(Nose nose): this ( ) 
+        {
+            _nose = nose;
+      
         }
 
         private async void captureButton_Clicked(object sender, EventArgs e)
@@ -39,8 +65,11 @@ namespace Knowzy
             if (photoService != null)
             {
                 var source = await photoService.TakePhotoAsync();
-                noseImage.Source = ImageSource.FromUri(new Uri(_nose.Image)); // set source of nose image
                 image.Source = source;
+                if (_nose != null)
+                {
+                    noseImage.Source = ImageSource.FromUri(new Uri(_nose.Image)); // set source of nose image                   
+                } 
                 imageGrid.IsVisible = true; // set visibility to true
             }
 

@@ -16,6 +16,7 @@
       <DependentUpon>CameraPage.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IPhotoService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IRemoteLaunchService.cs" />

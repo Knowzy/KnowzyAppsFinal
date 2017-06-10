@@ -116,7 +116,7 @@ namespace Knowzy.Droid
             if (system != null)
             {
                 var request = new Microsoft.ConnectedDevices.RemoteSystemConnectionRequest(system);
-                Uri uri = new Uri("knowzy://captureimage?Nose=" + noseId );
+                Uri uri = new Uri( $"knowzy://?{Constants.TaskParam}={Constants.CaptureImageTask}&{Constants.NoseParam}={noseId}");
                 var launchUriStatus = await Microsoft.ConnectedDevices.RemoteLauncher.LaunchUriAsync(request, uri);
                 return launchUriStatus; 
             }

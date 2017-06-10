@@ -9,12 +9,27 @@ namespace Knowzy
 {
 	public partial class App : Application
 	{
-		public App ()
-		{
-			InitializeComponent();
+        public App( Dictionary <string, string> parameters = null  )
+        {
+            InitializeComponent();
 
-            MainPage = new NavigationPage(new MainPage());
+            string task = string.Empty;
+            string noseId = string.Empty;
+            if (parameters != null)
+            {
+                parameters.TryGetValue(Constants.TaskParam, out task);
+                parameters.TryGetValue(Constants.NoseParam, out noseId);
+            } 
+                         
+            if (task == Constants.CaptureImageTask  )
+            {
+                MainPage = new NavigationPage(new CameraPage(noseId)); 
+            } 
+            else
+                MainPage = new NavigationPage(new MainPage());
+
         }
+
 
 		protected override void OnStart ()
 		{
