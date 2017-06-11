@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"             
+             xmlns:win="clr-namespace:Windows.UI.Xaml.Controls;assembly=Windows,
+            Version=255.255.255.255, Culture=neutral, PublicKeyToken=null,
+            ContentType=WindowsRuntime;targetPlatform=Windows"
+
+             x:Class="Knowzy.CameraPage">
+    <ContentPage.Content>
+        <StackLayout VerticalOptions="FillAndExpand"
+                HorizontalOptions="FillAndExpand"
+                Orientation="Vertical"
+                Spacing="15">
+            <Button x:Name="captureButton"
+            Text="Capture Image"
+            Clicked="captureButton_Clicked"></Button>
+
+            <!-- UWP XAML CONTROL InkToolbar -->
+            <ContentView x:Name="InkingToolbar">
+                <win:InkToolbar></win:InkToolbar>
+            </ContentView>
+
+            
+            <Grid x:Name="imageGrid" IsVisible="False">
+                <Image x:Name="image"></Image>
+                <ContentView x:Name="InkingContent">
+                    <win:InkCanvas></win:InkCanvas>
+                </ContentView>
+
+
+                <AbsoluteLayout>
+                    <Image x:Name="noseImage"
+            HeightRequest="120"
+            WidthRequest="120"
+            AbsoluteLayout.LayoutBounds="0, 0, AutoSize, AutoSize"
+            AbsoluteLayout.LayoutFlags="None">
+                        <!-- Gesture Recognizers -->
+                        <Image.GestureRecognizers>
+                            <PanGestureRecognizer PanUpdated="OnPanUpdated" />
+                            <PinchGestureRecognizer PinchUpdated="OnPinchUpdated" />
+                        </Image.GestureRecognizers>
+
+                    </Image>
+                </AbsoluteLayout>
+            </Grid>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

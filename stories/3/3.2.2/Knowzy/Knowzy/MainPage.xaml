@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:Knowzy"
+             x:Class="Knowzy.MainPage">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <ListView x:Name="ProductListView" ItemTapped="ProductListViewItemTapped" Grid.Row="0">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout Orientation="Horizontal">
+                            <Image Source="{Binding Image}" HeightRequest="150" WidthRequest="150"></Image>
+                            <Label Text="{Binding Name}"></Label>
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <Grid x:Name="remoteLaunchContainer" Grid.Row="1" IsVisible="False">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" /> 
+            </Grid.ColumnDefinitions>
+            <Label Text="Remote launch"  />
+            <ProgressBar x:Name="useRemoteDiscovery" Grid.Column="1" HorizontalOptions="Fill"/>
+            <Switch  x:Name="useRemoteLaunch" IsToggled="False" IsVisible="False" Grid.Column="1" HorizontalOptions="Fill"/>
+        </Grid>
+    </Grid>
+</ContentPage>
