@@ -8,6 +8,6 @@ namespace Knowzy
 {
     public interface IPhotoService
     {
-        Task<ImageSource> TakePhotoAsync();
+        Task<byte[]> TakePhotoAsync();
     }
 }
