@@ -36,7 +36,7 @@ namespace Microsoft.Knowzy.Xamarin.Services
                 AppActivityId = appActivityId,
                 ActivationUrl = $"knowzyinventory:{appActivityId}",
                 VisualElements = new VisualInfo { DisplayText = model.Name },
-                ActivitySourceHost = "https://microsoftknowzyweb20170922113924.azurewebsites.net"
+                ActivitySourceHost = "microsoftknowzyweb20171009022902.azurewebsites.net"
             };
 
             string activitiesUrl = App.GraphClient.Me.AppendSegmentToRequestUrl("activities");
@@ -60,11 +60,28 @@ namespace Microsoft.Knowzy.Xamarin.Services
             return "Checkpoint created/updated";
         }
 
+        public async Task<string> RemoveInventoryActivityAsync(InventoryModel model)
+        {
+            var appActivityId = string.Concat("item?id=", model.InventoryId);
+
+            string activitiesUrl = App.GraphClient.Me.AppendSegmentToRequestUrl("activities");
+            string activitiesUrlWithId = string.Concat(activitiesUrl, "/", WebUtility.UrlEncode(model.InventoryId));
+
+            return await DeleteActivity(activitiesUrlWithId);
+        }
+
+        private async Task<string> DeleteActivity(string activitiesUrlWithId)
+        {
+            Activity activity = null;
+            var response = await CreateCustomGraphRequest(activity, activitiesUrlWithId, HttpMethod.Delete);
+
+            return "Activity Deleted";
+        }
+
         private async Task<string> CreateOrUpdateActivity(Activity activity, string activitiesUrlWithId)
         {
-            var response = await CreateCustomGraphRequest(activity, activitiesUrlWithId);
+            var response = await CreateCustomGraphRequest(activity, activitiesUrlWithId, HttpMethod.Put);
 
-            // we need to pull the activity Id off of the response headers for now - we should be getting it back in the response body
             var id = response?.Headers?.Location?.Segments?[4];
 
             switch (response.StatusCode)
@@ -82,9 +99,8 @@ namespace Microsoft.Knowzy.Xamarin.Services
 
         private async Task<string> CreateOrUpdateHistoryItem(HistoryItem historyItem, string historyUrlWithId)
         {
-            var response = await CreateCustomGraphRequest(historyItem, historyUrlWithId);
+            var response = await CreateCustomGraphRequest(historyItem, historyUrlWithId, HttpMethod.Put);
 
-            // we need to pull the historyItem Id off of the response headers for now - we should be getting it back in the response body
             var id = response?.Headers?.Location?.Segments?[6];
 
             switch (response.StatusCode)
@@ -100,16 +116,19 @@ namespace Microsoft.Knowzy.Xamarin.Services
             return id;
         }
 
-        private async Task<HttpResponseMessage> CreateCustomGraphRequest<T>(T item, string customUrl)
+        private async Task<HttpResponseMessage> CreateCustomGraphRequest<T>(T item, string customUrl, HttpMethod method)
         {
-            List<T> containerList = new List<T> { item };
+            HttpRequestMessage request = new HttpRequestMessage(method, customUrl);
+            
+            if(method.Method == HttpMethod.Put.Method)
+            {
+                List<T> containerList = new List<T> { item };
+                var settings = new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver(), NullValueHandling = NullValueHandling.Ignore };
+                string itemJson = JsonConvert.SerializeObject(containerList, settings);
+                var stringContent = new StringContent(itemJson, Encoding.UTF8, "text/json");
+                request.Content = stringContent;
+            }
 
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Put, customUrl);
-            var settings = new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver(), NullValueHandling = NullValueHandling.Ignore };
-            string itemJson = JsonConvert.SerializeObject(containerList, settings);
-            var stringContent = new StringContent(itemJson, Encoding.UTF8, "text/json");
-
-            request.Content = stringContent;
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", AuthenticationService.Current.TokenForUser);
 
             HttpResponseMessage response = null;

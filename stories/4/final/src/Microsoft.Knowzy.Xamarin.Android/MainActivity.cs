@@ -23,7 +23,9 @@ namespace Microsoft.Knowzy.Xamarin.Android
             LoadApplication(new App());
             App.PCA.RedirectUri = "msal1ada69dc-9e00-482f-9f29-769d89dd1e78://auth";
 
-            App.UiParent = new UIParent(Forms.Context as Activity);           
+            App.UiParent = new UIParent(Forms.Context as Activity);
+
+            string packageName = this.PackageName;
         }
 
         protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)

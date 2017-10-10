@@ -18,6 +18,8 @@ namespace Microsoft.Knowzy.Xamarin
 {
     public partial class MainPage : ContentPage
     {
+        private bool _deleteActivityEnabled = false;
+
         public MainPage()
         {
             InitializeComponent();
@@ -32,7 +34,16 @@ namespace Microsoft.Knowzy.Xamarin
 
         private async void InventoryList_ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
-            lblActivityStatus.Text = await UserActivityService.Current.RecordInventoryActivityAndHistoryItemAsync(e.SelectedItem as InventoryModel);
+            lblActivityStatus.Text = string.Empty;
+
+            if (!_deleteActivityEnabled)
+            {
+                lblActivityStatus.Text = await UserActivityService.Current.RecordInventoryActivityAndHistoryItemAsync(e.SelectedItem as InventoryModel);
+            }
+            else
+            {
+                lblActivityStatus.Text = await UserActivityService.Current.RemoveInventoryActivityAsync(e.SelectedItem as InventoryModel);
+            }
         }
 
         private async void btnSignInSignOut_Clicked(object sender, EventArgs e)
@@ -52,6 +63,11 @@ namespace Microsoft.Knowzy.Xamarin
                 lblUserName.Text = string.Empty;
                 btnSignInSignOut.Text = "Sign In";
             }
+        }
+
+        private void tglDeleteActivity_Toggled(object sender, ToggledEventArgs e)
+        {
+            _deleteActivityEnabled = e.Value;
         }
     }
 

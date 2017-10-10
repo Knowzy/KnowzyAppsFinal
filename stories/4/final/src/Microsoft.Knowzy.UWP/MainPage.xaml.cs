@@ -170,5 +170,15 @@ namespace Microsoft.Knowzy.UWP
                 await new MessageDialog("Please select an item to edit").ShowAsync();
             }
         }
+
+        private void CheckBoxPWILOEnabled_Checked(object sender, RoutedEventArgs e)
+        {
+            App.IsPWILOEnabled = true;
+        }
+
+        private void CheckBoxPWILOEnabled_Unchecked(object sender, RoutedEventArgs e)
+        {
+            App.IsPWILOEnabled = false;
+        }
     }
 }

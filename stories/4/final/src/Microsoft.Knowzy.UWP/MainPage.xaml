@@ -49,5 +49,7 @@
             </telerikChart:RadCartesianChart>
         </Grid>
 
+        <CheckBox x:Name="CheckBoxPWILOEnabled" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignRightWithPanel="True" IsChecked="False" Checked="CheckBoxPWILOEnabled_Checked" Unchecked="CheckBoxPWILOEnabled_Unchecked" Content="Demo: PWILO enabled?" />
+
     </RelativePanel>
 </Page>
