@@ -57,7 +57,7 @@ namespace Microsoft.Knowzy.Xamarin.Services
 
             var historyEndPointId = await CreateOrUpdateHistoryItem(historyItem, historyUrlWithId);
 
-            return "Checkpoint created/updated";
+            return $"Created/updated activity: {activityEndPointId}, history: {historyId}";
         }
 
         public async Task<string> RemoveInventoryActivityAsync(InventoryModel model)
@@ -130,7 +130,7 @@ namespace Microsoft.Knowzy.Xamarin.Services
             }
 
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", AuthenticationService.Current.TokenForUser);
-
+            
             HttpResponseMessage response = null;
             try
             {
