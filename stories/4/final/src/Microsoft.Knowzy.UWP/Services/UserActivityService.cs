@@ -20,6 +20,8 @@ namespace Microsoft.Knowzy.UWP.Services
 
         public async Task RecordInventoryUserActivity(EditItemViewModel editItemViewModel)
         {
+            if (!App.IsPWILOEnabled) return;
+
             UserActivityChannel channel = UserActivityChannel.GetDefault();
             string activityId = string.Concat("item?id=", editItemViewModel.Id);
 

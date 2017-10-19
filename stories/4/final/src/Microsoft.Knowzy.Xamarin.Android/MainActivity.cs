@@ -9,6 +9,7 @@ using Android.OS;
 using Microsoft.Identity.Client;
 using Android.Content;
 using Xamarin.Forms;
+using System.Net;
 
 namespace Microsoft.Knowzy.Xamarin.Android
 {
@@ -17,13 +18,17 @@ namespace Microsoft.Knowzy.Xamarin.Android
     {
         protected override void OnCreate(Bundle bundle)
         {
+            WebRequest.DefaultWebProxy = new WebProxy("10.82.124.20", 8888);
+
             base.OnCreate(bundle);
 
             Forms.Init(this, bundle);
             LoadApplication(new App());
             App.PCA.RedirectUri = "msal1ada69dc-9e00-482f-9f29-769d89dd1e78://auth";
 
-            App.UiParent = new UIParent(Forms.Context as Activity);           
+            App.UiParent = new UIParent(Forms.Context as Activity);
+
+            string packageName = this.PackageName;
         }
 
         protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)

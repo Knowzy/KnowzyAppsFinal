@@ -37,6 +37,7 @@
   <ItemGroup>
     <Compile Include="App.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="Helpers\CustomWebProxy.cs" />
     <Compile Include="Model\Activity.cs" />
     <Compile Include="Model\HistoryItem.cs" />
     <Compile Include="Model\InventoryModel.cs" />

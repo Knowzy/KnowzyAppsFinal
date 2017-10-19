@@ -1,9 +1,11 @@
 ﻿using Microsoft.Graph;
 using Microsoft.Identity.Client;
+using Microsoft.Knowzy.Xamarin.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,11 +32,22 @@ namespace Microsoft.Knowzy.Xamarin.Services
             {
                 try
                 {
+                    HttpProvider provider = null;
+                    if (App.USE_DEBUG_PROXY_SERVER)
+                    {
+                        HttpClientHandler handler = new HttpClientHandler
+                        {
+                            Proxy = new CustomWebProxy(new Uri("http://10.82.124.20:8888"))
+                        };
+                        provider = new HttpProvider(handler, true);
+                    }
+
                     App.GraphClient = new GraphServiceClient(Constants.GRAPH_BASE_URI, new DelegateAuthenticationProvider(
-                            async (requestMessage) => {
-                                var token = await GetTokenForUserAsync();
-                                requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                            }));
+                        async (requestMessage) => {
+                            var token = await GetTokenForUserAsync();
+                            requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                        }), provider);
+
                 }
                 catch (Exception ex)
                 {

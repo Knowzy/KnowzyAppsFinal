@@ -24,6 +24,11 @@
                     </ListView.ItemTemplate>
                 </ListView>
 
+                <StackLayout Orientation="Horizontal">
+                    <Label Text="Toggle Activity Delete" />
+                    <Switch x:Name="tglDeleteActivity" Toggled="tglDeleteActivity_Toggled" />
+                </StackLayout>
+                    
                 <Label x:Name="lblActivityStatus" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" />
 
             </StackLayout>

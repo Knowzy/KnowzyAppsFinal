@@ -16,6 +16,8 @@ namespace Microsoft.Knowzy.Xamarin
         public static string[] Scopes = { "User.Read UserTimelineActivity.Write.CreatedByApp" };
         public static string Username = string.Empty;
 
+        public static bool USE_DEBUG_PROXY_SERVER = false;
+
         public static UIParent UiParent = null;
 
         public static GraphServiceClient GraphClient = null;
