@@ -83,10 +83,10 @@ namespace Microsoft.Knowzy.UWP.ViewModels
             }
         }
 
-        private DateTime developmentStartDate;
+        private DateTime? developmentStartDate;
 
         [Display(Header = "Development Start Date")]
-        public DateTime DevelopmentStartDate
+        public DateTime? DevelopmentStartDate
         {
             get { return developmentStartDate; }
             set
@@ -96,10 +96,10 @@ namespace Microsoft.Knowzy.UWP.ViewModels
             }
         }
 
-        private DateTime expectedCompletionDate;
+        private DateTime? expectedCompletionDate;
 
         [Display(Header = "Expected Completion Date")]
-        public DateTime ExpectedCompletionDate
+        public DateTime? ExpectedCompletionDate
         {
             get { return expectedCompletionDate; }
             set

@@ -1,5 +1,6 @@
-﻿using Microsoft.Knowzy.Domain.Enums;
-using Microsoft.Knowzy.NET.BLL;
+﻿using Microsoft.Knowzy.DataProvider;
+using Microsoft.Knowzy.Domain;
+using Microsoft.Knowzy.Domain.Enums;
 using Microsoft.Knowzy.UWP.Services;
 using Microsoft.Knowzy.UWP.ViewModels;
 using System;
@@ -21,7 +22,6 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
-using static Microsoft.Knowzy.NET.DAL.KnowzyDataSet;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -32,9 +32,11 @@ namespace Microsoft.Knowzy.UWP
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        private JsonDataProvider _provider = new JsonDataProvider();
+
         private EditItemViewModel _editItemViewModel;
 
-        private InventoryDataTable _inventoryDataTable;
+        //private InventoryDataTable _inventoryDataTable;
 
         private List<ChartData> _chartData;
 
@@ -44,17 +46,17 @@ namespace Microsoft.Knowzy.UWP
             Loaded += MainPage_Loaded;
         }
 
-        private void MainPage_Loaded(object sender, RoutedEventArgs e)
+        private async void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
-            _inventoryDataTable = InventoryBLL.Current.GetInventory();
-            DataGridInventory.ItemsSource = _inventoryDataTable;
+            //_inventoryDataTable = InventoryBLL.Current.GetInventory();
+            DataGridInventory.ItemsSource = await _provider.GetDataAsync(); //_inventoryDataTable;
 
-            _chartData = (from i in _inventoryDataTable
+            _chartData = (from i in await _provider.GetDataAsync()
                           orderby i.Status
                           group i by i.Status into grp
-                          select new ChartData { Category = grp.Key, Value = grp.Count() }).ToList();
+                          select new ChartData { Category = grp.Key.ToString(), Value = grp.Count() }).ToList();
 
-            RadLineSeries.ItemsSource = _chartData;
+            RadLineSeries.ItemsSource = await _provider.GetDataAsync();
         }
 
         private async void NewInventoryButton_Click(object sender, RoutedEventArgs e)
@@ -86,27 +88,28 @@ namespace Microsoft.Knowzy.UWP
 
             bool isNewItem = false;
 
-            InventoryRow inventoryRow = null;
+            //InventoryRow inventoryRow = null;
+            Product product = null;
 
             if (!isNewItem)
             {
-                inventoryRow = InventoryBLL.Current.GetInventory().FindById(parameters[1]);
+                product = await _provider.GetDataByIdAsync(parameters[1]); //InventoryBLL.Current.GetInventory().FindById(parameters[1]);
             }
 
-            isNewItem = (inventoryRow == null);
+            isNewItem = (product == null);
 
             _editItemViewModel = new EditItemViewModel();
 
-            if (!isNewItem && inventoryRow != null)
+            if (!isNewItem && product != null)
             {
-                _editItemViewModel.Id = inventoryRow.Id;
-                _editItemViewModel.Engineer = inventoryRow.Engineer;
-                _editItemViewModel.Name = inventoryRow.Name;
-                _editItemViewModel.RawMaterial = inventoryRow.RawMaterial;
-                _editItemViewModel.DevelopmentStartDate = inventoryRow.DevelopmentStartDate;
-                _editItemViewModel.ExpectedCompletionDate = inventoryRow.ExpectedCompletionDate;
-                _editItemViewModel.Notes = inventoryRow.Notes;
-                _editItemViewModel.ImageSource = inventoryRow.ImageSource;
+                _editItemViewModel.Id = product.Id;
+                _editItemViewModel.Engineer = product.Engineer;
+                _editItemViewModel.Name = product.Name;
+                _editItemViewModel.RawMaterial = product.RawMaterial;
+                _editItemViewModel.DevelopmentStartDate = product.DevelopmentStartDate;
+                _editItemViewModel.ExpectedCompletionDate = product.ExpectedCompletionDate;
+                _editItemViewModel.Notes = product.Notes;
+                _editItemViewModel.ImageSource = product.ImageSource;
             }
 
             var editItemView = new EditItemView
@@ -126,7 +129,7 @@ namespace Microsoft.Knowzy.UWP
 
         private async void EditInventoryButton_Click(object sender, RoutedEventArgs e)
         {
-            var selectedInventory = DataGridInventory.SelectedItem as InventoryRow;
+            var selectedInventory = DataGridInventory.SelectedItem as Product;
 
             if (selectedInventory != null)
             {
@@ -136,7 +139,7 @@ namespace Microsoft.Knowzy.UWP
                     Engineer = selectedInventory.Engineer,
                     Name = selectedInventory.Name,
                     RawMaterial = selectedInventory.RawMaterial,
-                    DevelopmentStatus = Enum.Parse<DevelopmentStatus>(selectedInventory.Status, true),
+                    DevelopmentStatus = Enum.Parse<DevelopmentStatus>(selectedInventory.Status.ToString(), true),
                     DevelopmentStartDate = selectedInventory.DevelopmentStartDate,
                     ExpectedCompletionDate = selectedInventory.ExpectedCompletionDate,
                     Notes = selectedInventory.Notes,

@@ -1,4 +1,5 @@
-﻿using Microsoft.Knowzy.NET.DAL.KnowzyDataSetTableAdapters;
+﻿using Microsoft.Knowzy.DataProvider;
+using Microsoft.Knowzy.NET.DAL.KnowzyDataSetTableAdapters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +26,8 @@ namespace Microsoft.Knowzy.NET.BLL
 
         public InventoryDataTable GetInventory()
         {
+            InventoryDataTable dataTable = new InventoryDataTable();
+            
             return InventoryTableAdapter.GetAllInventory();
         }
 
