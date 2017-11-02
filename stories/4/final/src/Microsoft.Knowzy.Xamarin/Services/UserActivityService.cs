@@ -36,7 +36,8 @@ namespace Microsoft.Knowzy.Xamarin.Services
                 AppActivityId = appActivityId,
                 ActivationUrl = $"knowzyinventory:{appActivityId}",
                 VisualElements = new VisualInfo { DisplayText = model.Name },
-                ActivitySourceHost = "microsoftknowzyweb20171009022902.azurewebsites.net"
+                ActivitySourceHost = "microsoftknowzyweb20171009022902.azurewebsites.net",
+                FallbackUrl = "https://www.microsoft.com/en-us/store/p/uwp-community-toolkit-sample-app/9nblggh4tlcq"
             };
 
             string activitiesUrl = App.GraphClient.Me.AppendSegmentToRequestUrl("activities");

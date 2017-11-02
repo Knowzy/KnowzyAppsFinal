@@ -30,5 +30,8 @@ namespace Microsoft.Knowzy.Xamarin.Model
 
         // required
         public VisualInfo VisualElements { get; set; }
+
+        // optional
+        public string FallbackUrl { get; set; }
     }
 }
