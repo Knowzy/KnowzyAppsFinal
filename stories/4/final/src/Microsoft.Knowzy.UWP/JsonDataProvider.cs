@@ -45,6 +45,8 @@ namespace Microsoft.Knowzy.DataProvider
 
         public async Task<Product> GetDataByIdAsync(string id)
         {
+            _file = await StorageFile.GetFileFromApplicationUriAsync(new Uri(_jsonFilePath));
+
             var products = JsonConvert.DeserializeObject<Product[]>(await FileIO.ReadTextAsync(_file));
 
             var product = (from p in products where p.Id == id select p).FirstOrDefault();
